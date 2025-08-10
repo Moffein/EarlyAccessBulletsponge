@@ -6,12 +6,13 @@ using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using RoR2.Projectile;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace EarlyAccessBulletsponge
 {
-    [BepInPlugin("com.Moffein.EarlyAccessBulletsponge", "EarlyAccessBulletsponge", "1.0.0")]
+    [BepInPlugin("com.Moffein.EarlyAccessBulletsponge", "EarlyAccessBulletsponge", "1.0.1")]
     public class EarlyAccessBulletspongePlugin : BaseUnityPlugin
     {
         public static string blacklistedBodyString = "GupBody, GeepBody, GipBody, GrandparentBody, MegaConstructBody, GreaterWispBody, BellBody, ClayBruiserBody," +
@@ -61,8 +62,9 @@ namespace EarlyAccessBulletsponge
 
             foreach (var bodyObject in BodyCatalog.allBodyPrefabs)
             {
+                if (bodyObject.GetComponent<ProjectileController>()) continue;
                 CharacterBody body = bodyObject.GetComponent<CharacterBody>();
-                if (!body || indices.Contains(body.bodyIndex)) continue;
+                if (!body || indices.Contains(body.bodyIndex) || body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)) continue;
                 if (body.gameObject.name.Contains("Drone")) continue;//Jonk
 
                 if (body.isChampion)
