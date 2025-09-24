@@ -12,10 +12,10 @@ using RoR2.Projectile;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace EarlyAccessBulletsponge
 {
-    [BepInPlugin("com.Moffein.EarlyAccessBulletsponge", "EarlyAccessBulletsponge", "1.0.1")]
+    [BepInPlugin("com.Moffein.EarlyAccessBulletsponge", "EarlyAccessBulletsponge", "1.0.2")]
     public class EarlyAccessBulletspongePlugin : BaseUnityPlugin
     {
-        public static string blacklistedBodyString = "GupBody, GeepBody, GipBody, GrandparentBody, MegaConstructBody, GreaterWispBody, BellBody, ClayBruiserBody," +
+        public static string blacklistedBodyString = "ArcherBugBody, GupBody, GeepBody, GipBody, GrandparentBody, MegaConstructBody, GreaterWispBody, BellBody, ClayBruiserBody," +
             "VoidBarnacleBody, HalcyoniteBody, ScorchlingBody, LunarGolemBody, LunarWispBody, LunarExploderBody, NullifierBody, VoidJailerBody," +
             "MoffeinArchWisp, RobYoungVagrantBody, BrotherBody, BrotherHurtBody, FalseSonBossBody, FalseSonBossBodyLunarShard, FalseSonBossBodyBrokenLunarShard," +
             "MiniVoidRaidCrabBodyBase, MiniVoidRaidCrabBodyPhase1, MiniVoidRaidCrabBodyPhase2, MiniVoidRaidCrabBodyPhase3, ArraignP1Body, ArraignP2Body, RegigigasBody," +
