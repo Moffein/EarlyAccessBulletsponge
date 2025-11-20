@@ -12,10 +12,15 @@ using RoR2.Projectile;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace EarlyAccessBulletsponge
 {
-    [BepInPlugin("com.Moffein.EarlyAccessBulletsponge", "EarlyAccessBulletsponge", "1.0.2")]
+    [BepInPlugin("com.Moffein.EarlyAccessBulletsponge", "EarlyAccessBulletsponge", "1.1.0")]
     public class EarlyAccessBulletspongePlugin : BaseUnityPlugin
     {
-        public static string blacklistedBodyString = "ArcherBugBody, GupBody, GeepBody, GipBody, GrandparentBody, MegaConstructBody, GreaterWispBody, BellBody, ClayBruiserBody," +
+        public static bool useCustomBlacklistConfig;
+        public static string blacklistedBodyString = "DefectiveUnitBody, FriendUnitBody, ExhaustPortWeakpointBody, ExplosiveJunkBombDestructibleBody," +
+            "SolusWingBody, SolusHeartBody, SolusHeartBody_Offering, VultureHunterBody, TankerBody, IronHaulerBody, MinePodBody, SolusMineBody," +
+            "SolusAmalgamatorFlamethrowerCannonBody, SolusAmalgamatorMissilePodBody, SolusAmalgamatorThrusterBody" +
+            "RoboBallMiniBody, RoboBallGreenBuddyBody, RoboBallRedBuddyBody, MimicBodyNew, AerosBigTurretBody, IfritPylonEnemyBody, IfritPylonPlayerBody,"+
+            "ArcherBugBody, GupBody, GeepBody, GipBody, GrandparentBody, MegaConstructBody, GreaterWispBody, BellBody, ClayBruiserBody," +
             "VoidBarnacleBody, HalcyoniteBody, ScorchlingBody, LunarGolemBody, LunarWispBody, LunarExploderBody, NullifierBody, VoidJailerBody," +
             "MoffeinArchWisp, RobYoungVagrantBody, BrotherBody, BrotherHurtBody, FalseSonBossBody, FalseSonBossBodyLunarShard, FalseSonBossBodyBrokenLunarShard," +
             "MiniVoidRaidCrabBodyBase, MiniVoidRaidCrabBodyPhase1, MiniVoidRaidCrabBodyPhase2, MiniVoidRaidCrabBodyPhase3, ArraignP1Body, ArraignP2Body, RegigigasBody," +
@@ -34,7 +39,8 @@ namespace EarlyAccessBulletsponge
 
         private void ReadConfig()
         {
-            blacklistedBodyString = Config.Bind<string>("General", "Body Blacklist", blacklistedBodyString, new BepInEx.Configuration.ConfigDescription("List of bodies unaffected by this mod, separated by commas. Anything with Drone in the name is auto-blacklisted.")).Value;
+            useCustomBlacklistConfig = Config.Bind<bool>("General", "Use Custom Body Blacklist", false, new BepInEx.Configuration.ConfigDescription("Use custom body blacklist. You will need to boot the game up to generate the config option after enabling this.")).Value;
+            if (useCustomBlacklistConfig) blacklistedBodyString = Config.Bind<string>("General", "Body Blacklist", blacklistedBodyString, new BepInEx.Configuration.ConfigDescription("List of bodies unaffected by this mod, separated by commas. Anything with Drone in the name is auto-blacklisted.")).Value;
             trashTierMultiplier = Config.Bind<float>("General", "Trash Tier Multiplier", trashTierMultiplier, new BepInEx.Configuration.ConfigDescription("HP multiplier for low-health enemies.")).Value;
             impTierMultiplier = Config.Bind<float>("General", "Imp Tier Multiplier", impTierMultiplier, new BepInEx.Configuration.ConfigDescription("HP multiplier for Imp-tier enemies.")).Value;
             golemTierMultiplier = Config.Bind<float>("General", "Golem Tier Multiplier", golemTierMultiplier, new BepInEx.Configuration.ConfigDescription("HP multiplier for Golem-tier enemies.")).Value;
@@ -57,6 +63,14 @@ namespace EarlyAccessBulletsponge
             foreach (SurvivorDef sur in SurvivorCatalog.allSurvivorDefs)
             {
                 BodyIndex index = BodyCatalog.FindBodyIndex(sur.bodyPrefab);
+                if (index != BodyIndex.None) indices.Add(index);
+            }
+
+            //Blacklist drones
+            List<GameObject> droneBodies = new List<GameObject>();
+            foreach(DroneDef drone in DroneCatalog.allDroneDefs)
+            {
+                BodyIndex index = BodyCatalog.FindBodyIndex(drone.bodyPrefab);
                 if (index != BodyIndex.None) indices.Add(index);
             }
 
